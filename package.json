@@ -47,6 +47,7 @@
     "react-hook-form": "^7.29.0",
     "serialazy": "^3.0.0",
     "styled-jsx-plugin-postcss": "^4.0.1",
+    "sweetalert2": "^11.4.8",
     "swr": "^1.2.2"
   },
   "devDependencies": {
