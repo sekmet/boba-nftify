@@ -1,9 +1,6 @@
 import { useEffect, useState } from 'react';
 
 import {
-  CogIcon,
-  HeartIcon,
-  PencilIcon,
   PlusSmIcon as PlusSmIconSolid,
   // SearchIcon,
   ViewGridIcon as ViewGridIconSolid,
@@ -43,11 +40,11 @@ const tabs = [
 
 let currentFile = {
   ID: 0,
-  name: 'IMG_4985.HEIC',
+  name: 'BOBA-NETWORK.png',
   size: 39000,
-  link: 'https://images.unsplash.com/photo-1582053433976-25c00369fc93?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=512&q=80',
+  link: '/assets/images/boba_token_icon.png',
   information: {
-    'Uploaded by': 'Marie Culver',
+    'Uploaded by': 'Boba user',
     Created: 'June 8, 2020',
     'Last modified': 'June 8, 2020',
     Dimensions: '4032 x 3024',
@@ -59,12 +56,6 @@ let currentFile = {
       name: 'Aimee Douglas',
       imageUrl:
         'https://images.unsplash.com/photo-1502685104226-ee32379fefbe?ixlib=rb-=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=3&w=1024&h=1024&q=80',
-    },
-    {
-      id: 2,
-      name: 'Andrea McMillan',
-      imageUrl:
-        'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixqx=oilqXxSqey&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
     },
   ],
 };
@@ -101,8 +92,10 @@ const Index = () => {
     setDb(db);
     const cfiles = getFiles(getDatabase(window.localStorage));
     setUserFiles(cfiles);
-    const currentFilename = getFilesByName(db, cfiles[0].name);
-    if (!currentfile) setCurrentFile(currentFilename[0]);
+    if (cfiles.length) {
+      const currentFilename = getFilesByName(db, cfiles[0].name);
+      if (!currentfile) setCurrentFile(currentFilename[0]);
+    }
   }, [listview]);
 
   console.log(currentfile);
@@ -229,12 +222,12 @@ const Index = () => {
               getFileDetails={(name: string) => getFileDetails(name)}
             />
 
-            <button
+            {/* <button
               type="button"
               className="flex-1 py-2 px-4 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-md border border-transparent focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 shadow-sm"
             >
               <CogIcon className="w-2 h-2" aria-hidden="true" /> Export Data
-            </button>
+                      </button> */}
           </div>
         </main>
 
@@ -255,13 +248,13 @@ const Index = () => {
                     {prettyBytes(currentFile.size)}
                   </p>
                 </div>
-                <button
+                {/* <button
                   type="button"
                   className="flex justify-center items-center ml-4 w-8 h-8 text-gray-400 hover:text-gray-500 bg-white hover:bg-gray-100 rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 >
                   <HeartIcon className="w-6 h-6" aria-hidden="true" />
                   <span className="sr-only">Favorite</span>
-                </button>
+                      </button> */}
               </div>
             </div>
             <div>
@@ -275,7 +268,7 @@ const Index = () => {
                     )) */}
               </dl>
             </div>
-            <div>
+            {/* <div>
               <h3 className="font-medium text-gray-900">Description</h3>
               <div className="flex justify-between items-center mt-2">
                 <p className="text-sm italic text-gray-500">
@@ -289,7 +282,7 @@ const Index = () => {
                   <span className="sr-only">Add description</span>
                 </button>
               </div>
-            </div>
+                  </div> */}
             <div>
               <h3 className="font-medium text-gray-900">Account</h3>
               <ul
