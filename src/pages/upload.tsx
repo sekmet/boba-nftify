@@ -132,8 +132,23 @@ const Index = () => {
     }
   }; */
 
+  const lazyFunding = async (imgUploaded: any) => {
+    if (bundler === null) {
+      throw new Error('Bundlr not connected');
+    }
+    const balance = await bundler?.getLoadedBalance();
+    const imgUploadedsize = Buffer.from(imgUploaded).byteLength;
+    const priceUpload = await bundler?.getPrice(imgUploadedsize);
+
+    if (balance.isLessThan(priceUpload)) {
+      const amount = priceUpload.minus(balance).multipliedBy(1.3);
+      await bundler.fund(amount.minus(amount.modulo(1)));
+    }
+  };
+
   const uploadFile = async (database: any) => {
     if (img && imgFile) {
+      await lazyFunding(img);
       console.log('uploading file', img);
       const res = await bundler?.uploader?.upload(img, [
         { name: 'Content-Type', value: imgFile.type },

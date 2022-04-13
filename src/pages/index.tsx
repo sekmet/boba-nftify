@@ -314,16 +314,18 @@ const Index = () => {
                 </li>
               </ul>
             </div>
-            <div className="flex">
-              <Link href={`/mint/${currentFile.ID}`}>
-                <a
-                  id="mint"
-                  className="flex-1 py-2 px-4 w-full text-sm font-medium text-center text-white bg-indigo-600 hover:bg-indigo-700 rounded-md border border-transparent focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 shadow-sm"
-                >
-                  Create NFT
-                </a>
-              </Link>
-            </div>
+            {currentfile && (
+              <div className="flex">
+                <Link href={`/mint/${currentFile.ID}`}>
+                  <a
+                    id="mint"
+                    className="flex-1 py-2 px-4 w-full text-sm font-medium text-center text-white bg-indigo-600 hover:bg-indigo-700 rounded-md border border-transparent focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 shadow-sm"
+                  >
+                    Create NFT
+                  </a>
+                </Link>
+              </div>
+            )}
           </div>
         </aside>
       </div>

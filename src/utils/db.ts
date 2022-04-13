@@ -53,15 +53,28 @@ if( DB.isNew() ) {
 	DB.commit();
 } else {
 
+    try {
+    // insert some data
+	DB.insert("files", {name: fileEntry.name, size: fileEntry.size, modifiedDate: fileEntry.modifiedDate, mimeType: fileEntry.mimeType, link: fileEntry.link, cid: fileEntry.cid, minted: false});
+
+	// commit the database to localStorage
+	// all create/drop/insert/update/delete operations should be committed
+	DB.commit();   
+
+    } catch (error) {
+
     // create the "books" table
-	//DB.createTable("files", ["name", "size", "modifiedDate", "mimeType", "link", "cid", "minted"]);
+	DB.createTable("files", ["name", "size", "modifiedDate", "mimeType", "link", "cid", "minted", "contractAddress", "tokenId", "accountAddress", "linkToken"]);
 
     // insert some data
 	DB.insert("files", {name: fileEntry.name, size: fileEntry.size, modifiedDate: fileEntry.modifiedDate, mimeType: fileEntry.mimeType, link: fileEntry.link, cid: fileEntry.cid, minted: false});
 
 	// commit the database to localStorage
 	// all create/drop/insert/update/delete operations should be committed
-	DB.commit();
+	DB.commit();        
+        
+    }
+
 }
 
 }

@@ -41,7 +41,7 @@ export default function Nav() {
   const navigation = [
     { name: 'Files', href: '/', current: getNavigation('/') },
     { name: 'Upload', href: '/upload', current: getNavigation('/upload') },
-    { name: 'Settings', href: '/settings', current: getNavigation('/settings') },
+    //{ name: 'Settings', href: '/settings', current: getNavigation('/settings') },
     { name: 'About', href: '/about', current: getNavigation('/about') },
   ];
 

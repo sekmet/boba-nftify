@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import Link from 'next/link';
 import prettyBytes from 'pretty-bytes';
 
 import { classNames, ellipsisAddress } from '@/utils';
@@ -15,6 +16,52 @@ export function Listing(props: any) {
   useEffect(() => {
     setListview(view);
   }, [view]);
+
+  if (!files?.length) {
+    return (
+      <div className="mt-6 md:py-3 md:px-4">
+        <div className="flex justify-center py-10 px-6 mt-1 rounded-md border-2 border-gray-300 border-dashed">
+          <div className="space-y-1 text-center">
+            <svg
+              className="mx-auto w-12 h-12 text-gray-400"
+              stroke="currentColor"
+              fill="none"
+              viewBox="0 0 48 48"
+              aria-hidden="true"
+            >
+              <path
+                d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
+                strokeWidth={2}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+            <div className="flex text-lg text-gray-600">
+              <label
+                htmlFor="file-upload"
+                className="relative font-bold text-indigo-600 hover:text-indigo-500 bg-white rounded-md focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 cursor-pointer"
+              >
+                <span>Click here to START</span>
+                <Link href="/upload">
+                  <button
+                    id="file-upload"
+                    name="file-upload"
+                    type="button"
+                    className="sr-only"
+                  />
+                </Link>
+              </label>
+              <p className="pl-1"> and upload a file</p>
+            </div>
+            <p className="text-xs text-gray-500">
+              You can upload PNG, JPG, GIF, MP4, MP3, OGG files
+              <br /> to Arweave using Bundlr.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <section className="pb-16 mt-8" aria-labelledby="gallery-heading">
