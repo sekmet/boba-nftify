@@ -1,23 +1,31 @@
-import { ReactNode, ReactElement, useState, useContext, useEffect } from 'react';
-import { ethers } from 'ethers';
+import {
+  ReactNode,
+  ReactElement,
+  useState,
+  useContext,
+  useEffect,
+} from 'react';
+
+import detectEthereumProvider from '@metamask/detect-provider';
 import { useEthers } from '@usedappify/core';
+import { ethers } from 'ethers';
 import { useSession } from 'next-auth/react';
 
+import { BundlrContext } from '@/context/BundlrContext';
 import Header from '@/layouts/Header';
 import Nav from '@/layouts/Nav';
 // import WebBundlr
 // import { WebBundlr } from "@bundlr-network/client";
-import { BundlrContext } from '@/context/BundlrContext';
 
 // import type { Session } from 'next-auth';
 type IAuthProps = {
   children: ReactElement<any, any>;
 };
 
-declare var window: any // TODO: specifically extend type to valid injected objects.
+declare let window: any; // TODO: specifically extend type to valid injected objects.
 
 const AuthApp = (props: IAuthProps) => {
-  const { data, status }:any = useSession({ required: true });
+  const { data, status }: any = useSession({ required: true });
   const isUser = !!data?.session?.user;
 
   if (isUser) {
@@ -36,45 +44,71 @@ type IDashboardProps = {
   auth: boolean;
 };
 
-
 const Dashboard = (props: IDashboardProps) => {
   const { account } = useEthers();
-  //const [bundler, setBundler] = useState<WebBundlr>();
-  //const [bundlerBoba, setBundlerBoba] = useState<WebBundlr>();
-  /*const [bundlerHttpAddress, setBundlerHttpAddress] = useState<string>(
+  // const [bundler, setBundler] = useState<WebBundlr>();
+  // const [bundlerBoba, setBundlerBoba] = useState<WebBundlr>();
+  /* const [bundlerHttpAddress, setBundlerHttpAddress] = useState<string>(
     "https://devnet.bundlr.network"
-  );*/
+  ); */
   // const [bundlerAddress, setBundlerAddress] = useState<string>();
   const [currency, setCurrency] = useState<string>();
   const [library, setLibrary] = useState<any>();
-  const { bundler, setBundler, bundlerBoba, setBundlerBoba } = useContext<any>(BundlrContext);
+  const { bundler, setBundler, bundlerBoba, setBundlerBoba } =
+    useContext<any>(BundlrContext);
 
-useEffect(() => {
-  const library = new ethers.providers.Web3Provider(window.ethereum, 'any');
-  setLibrary(library)
-  setCurrency('boba-eth')
-}, [])
+  const checkMetamask = async () => {
+    const provider = await detectEthereumProvider();
 
-console.log({ bundler, setBundler, bundlerBoba, setBundlerBoba, currency, library })
-return (
-  <AuthApp>
-    <>
-    {props.meta}
-    <div className="min-h-full">
-      <Nav />
-      <Header account={account} />
-      <main>
-        <div className="py-6 mx-auto max-w-7xl sm:px-6 lg:px-6">
-          {/* Replace with your content */}
-          <div className="px-0">{props.children}</div>
-          {/* /End replace */}
+    if (provider) {
+      console.log('Ethereum successfully detected!');
+      return true;
+    }
+
+    // if the provider is not detected, detectEthereumProvider resolves to null
+    console.log('Please install MetaMask!');
+    return false;
+  };
+
+  useEffect(() => {
+    checkMetamask().then((isMetamask) => {
+      if (isMetamask) {
+        const libraryWeb3 = new ethers.providers.Web3Provider(
+          window.ethereum,
+          'any'
+        );
+        setLibrary(libraryWeb3);
+        setCurrency('boba-eth');
+      }
+    });
+  }, []);
+
+  console.log({
+    bundler,
+    setBundler,
+    bundlerBoba,
+    setBundlerBoba,
+    currency,
+    library,
+  });
+  return (
+    <AuthApp>
+      <>
+        {props.meta}
+        <div className="min-h-full">
+          <Nav />
+          <Header account={account} />
+          <main>
+            <div className="py-6 mx-auto max-w-7xl sm:px-6 lg:px-6">
+              {/* Replace with your content */}
+              <div className="px-0">{props.children}</div>
+              {/* /End replace */}
+            </div>
+          </main>
         </div>
-      </main>
-    </div>
-    </>
-  </AuthApp>
-);
-
-}
+      </>
+    </AuthApp>
+  );
+};
 
 export { Dashboard };
