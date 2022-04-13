@@ -2,6 +2,11 @@
 
 🚀 Allows users on Boba to easily deploy and engage with Arweave via Bundlr, using BOBA tokens
 
+### Demo
+```
+https://boba.nftify.one/
+```
+
 <p align="center">
   <img src="docs/bobanftify1.jpg?raw=true" alt="BOBA NFTify banner"></a>
 </p>

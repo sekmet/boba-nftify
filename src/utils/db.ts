@@ -6,14 +6,25 @@ function getDatabase(localStorage: any) {
         const DB = new localStorageDB("bobaNftifyDb", localStorage);
         return DB;
     } catch (error) {
-        
+        const DB = new localStorageDB("bobaNftifyDb", localStorage);
+        // create the "books" table
+        DB.createTable("files", ["name", "size", "modifiedDate", "mimeType", "link", "cid", "minted", "contractAddress", "tokenId", "accountAddress", "linkToken"]);
+        return DB;
+
     }
 
 }
 
 function getFiles(DB: any) {
-    // select all files
+    try {
+            // select all files
     return DB.queryAll("files");
+    } catch (error) {
+                   // create the "books" table
+                   DB.createTable("files", ["name", "size", "modifiedDate", "mimeType", "link", "cid", "minted", "contractAddress", "tokenId", "accountAddress", "linkToken"]);
+                   return DB.queryAll("files");
+    }
+
 }
 
 function getFilesByName(DB: any, filename: string) {
@@ -32,7 +43,7 @@ function insertFileEntry(DB: any, fileEntry: any) {
 if( DB.isNew() ) {
 
     // create the "books" table
-	DB.createTable("files", ["name", "size", "modifiedDate", "mimeType", "link", "cid", "minted"]);
+	DB.createTable("files", ["name", "size", "modifiedDate", "mimeType", "link", "cid", "minted", "contractAddress", "tokenId", "accountAddress", "linkToken"]);
 
 	// insert some data
 	DB.insert("files", {name: fileEntry.name, size: fileEntry.size, modifiedDate: fileEntry.modifiedDate, mimeType: fileEntry.mime, link: fileEntry.link, cid: fileEntry.cid, minted: false});
