@@ -27,7 +27,7 @@ https://boba.nftify.one/
 
 ### Requirements
 
-- Node.js 14+ and npm
+- Node.js 14+, npm and Metamask
 
 ### Getting started
 

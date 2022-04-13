@@ -4,7 +4,7 @@ import { RadioGroup } from '@headlessui/react';
 import {
   // PencilIcon,
   LightningBoltIcon,
-  PlusSmIcon as PlusSmIconSolid,
+  CurrencyDollarIcon as CurrencyDollarIconSolid,
   // SearchIcon,
   // ViewGridIcon as ViewGridIconSolid,
   // ViewListIcon,
@@ -13,6 +13,7 @@ import {
 import { useEthers } from '@usedappify/core';
 import BigNumber from 'bignumber.js';
 import * as ethers from 'ethers';
+import Link from 'next/link';
 import prettyBytes from 'pretty-bytes';
 
 import Identicon from '@/components/Wallet/Identicon';
@@ -586,20 +587,22 @@ const Index = () => {
                     </li>
                   ))}
                   <li className="flex justify-between items-center py-2">
-                    <button
-                      type="button"
-                      className="group flex items-center p-1 -ml-1 bg-white rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                    >
-                      <span className="flex justify-center items-center w-8 h-8 text-gray-400 rounded-full border-2 border-gray-300 border-dashed">
-                        <PlusSmIconSolid
-                          className="w-5 h-5"
-                          aria-hidden="true"
-                        />
-                      </span>
-                      <span className="ml-4 text-sm font-medium text-indigo-600 group-hover:text-indigo-500">
-                        Fund Account
-                      </span>
-                    </button>
+                    <Link href="/profile">
+                      <button
+                        type="button"
+                        className="group flex items-center p-1 -ml-1 bg-white rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      >
+                        <span className="flex justify-center items-center w-8 h-8 text-gray-400 rounded-full border-2 border-gray-300 border-dashed">
+                          <CurrencyDollarIconSolid
+                            className="w-5 h-5 text-green-500"
+                            aria-hidden="true"
+                          />
+                        </span>
+                        <span className="ml-4 text-sm font-medium text-green-600 group-hover:text-green-500">
+                          Fund Account
+                        </span>
+                      </button>
+                    </Link>
                   </li>
                 </ul>
               </div>
