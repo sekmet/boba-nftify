@@ -47,7 +47,7 @@ export default function Nav() {
 
   const userNavigation = [
     { name: 'Your Profile', href: '/profile', onClick: () => console.log('Settings') },
-    { name: 'Settings', href: '#', onClick: () => console.log('Settings') },
+    // { name: 'Settings', href: '#', onClick: () => console.log('Settings') },
   ];
 
   const onOpen = () => console.log('onOpen disclosure');
@@ -61,8 +61,8 @@ export default function Nav() {
                 <div className="shrink-0">
                   <img
                     className="w-8 h-8"
-                    src="https://tailwindui.com/img/logos/workflow-mark-indigo-500.svg"
-                    alt="Workflow"
+                    src="/assets/images/boba_nftify_v1.png"
+                    alt="Boba Nftify"
                   />
                 </div>
                 <div className="hidden md:block">

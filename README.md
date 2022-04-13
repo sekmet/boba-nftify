@@ -1,13 +1,15 @@
 # BOBA NFTify
 
-🚀 Allows users on Boba to easily deploy and engage with Arweave via Bundlr, using BOBA tokens
+<p align="center">
+  <img src="docs/boba_nftify_v1.png?raw=true" alt="BOBA NFTify banner"></a>
+</p>
 
-## ( Updates in progress [+] )
+🚀 Allows users on Boba to easily deploy and engage with Arweave via Bundlr, using BOBA tokens.
 
-### Demo
-```
-https://boba.nftify.one/
-```
+## Demo
+
+### [https://boba.nftify.one/](https://boba.nftify.one/])
+
 
 <p align="center">
   <img src="docs/bobanftify1.jpg?raw=true" alt="BOBA NFTify banner"></a>
@@ -29,11 +31,18 @@ https://boba.nftify.one/
   <img src="docs/bobanftify6.jpg?raw=true" alt="BOBA NFTify banner"></a>
 </p>
 
-### Requirements
+## Features
 
-- Node.js 14+, npm and Metamask
+- 🔥 Allow fund your bundlr with "BOBA" and "BOBA/ETH" tokens
+- 🎉 Allow upload your PNG, JPG, GIF, MP4, MP3, OGG files to Arweave via Bundlr
+- 🎨 Allow mint your upload into a NFT (ERC721)
+- ✅ Simple PNG, JPG, GIF, MP4, MP3, OGG files manager with media preview
 
-### Getting started
+## Requirements
+
+- Node.js 14+, Npm and Metamask
+
+## Getting started
 
 Run the following command on your local environment:
 
@@ -52,7 +61,7 @@ npm run dev
 Open http://localhost:3000 with your favorite browser to see your project.
 
 
-### Deploy to production
+## Deploy to production
 
 You can see the results locally in production mode with:
 
