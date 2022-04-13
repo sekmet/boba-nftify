@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 
 import { useEthers } from '@usedappify/core';
 import { InjectedConnector } from '@web3-react/injected-connector';
-import { GetServerSideProps } from 'next';
+import { GetStaticProps, GetStaticPaths } from 'next';
 import { signIn, getProviders } from 'next-auth/react';
 import { useRouter } from 'next/router';
 
@@ -415,10 +415,17 @@ export default function Login(props: any) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getStaticProps: GetStaticProps = async () => {
   const providers = await getProviders();
   // const csrfToken = await getCsrfToken(context)
   return {
     props: { providers },
+  };
+};
+
+export const getStaticPaths: GetStaticPaths<{ slug: string }> = async () => {
+  return {
+    paths: [], // indicates that no page needs be created at build time
+    fallback: 'blocking', // indicates the type of fallback
   };
 };

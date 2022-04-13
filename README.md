@@ -2,6 +2,22 @@
 
 🚀 Allows users on Boba to easily deploy and engage with Arweave via Bundlr, using BOBA tokens
 
+<p align="center">
+  <img src="docs/bobanftify1.jpg?raw=true" alt="BOBA NFTify banner"></a>
+</p>
+
+<p align="center">
+  <img src="docs/bobanftify2.jpg?raw=true" alt="BOBA NFTify banner"></a>
+</p>
+
+<p align="center">
+  <img src="docs/bobanftify3.jpg?raw=true" alt="BOBA NFTify banner"></a>
+</p>
+
+<p align="center">
+  <img src="docs/bobanftify4.jpg?raw=true" alt="BOBA NFTify banner"></a>
+</p>
+
 ### Requirements
 
 - Node.js 14+ and npm
