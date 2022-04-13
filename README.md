@@ -8,7 +8,7 @@
 
 ## Demo
 
-### [https://boba.nftify.one/](https://boba.nftify.one/])
+### [https://boba.nftify.one/](https://boba.nftify.one])
 
 ## Features
 
