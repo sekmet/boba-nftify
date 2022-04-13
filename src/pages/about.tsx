@@ -27,16 +27,13 @@ const Index = () => {
       }
     >
       <div className="max-w-none prose prose-slate dark:prose-invert">
-        <h1 className="text-2xl font-bold">
-          Boilerplate code for your NextJS 12.x + Typescript + Ethers v5.x +
-          Tailwind CSS v3.x for <i>Web3</i> using <i>Ethereum</i> network.
-        </h1>
+        <h1 className="text-2xl font-bold">Boba Nftify</h1>
         <p className="leading-text">
           <span role="img" aria-label="rocket">
             🚀
           </span>{' '}
-          Next.js Boilerplate is a starter code for your Next js project for
-          Web3 by putting developer experience first .<br />
+          🚀 Allows users on Boba to easily deploy and engage with Arweave via
+          Bundlr, using BOBA tokens
           <span role="img" aria-label="zap">
             ⚡️
           </span>{' '}

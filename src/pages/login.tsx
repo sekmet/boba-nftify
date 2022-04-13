@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 
 import { useEthers } from '@usedappify/core';
 import { InjectedConnector } from '@web3-react/injected-connector';
-import { GetStaticProps, GetStaticPaths } from 'next';
+import { NextPage } from 'next';
 import { signIn, getProviders } from 'next-auth/react';
 import { useRouter } from 'next/router';
 
@@ -20,7 +20,7 @@ export const injected = new InjectedConnector({
   ],
 });
 
-export default function Login(props: any) {
+const Login: NextPage<any> = (props) => {
   const { activateBrowserWallet, account, activate } = useEthers();
   const router = useRouter();
   const { providers } = props;
@@ -413,9 +413,9 @@ export default function Login(props: any) {
       </div>
     </Auth>
   );
-}
+};
 
-export const getStaticProps: GetStaticProps = async () => {
+Login.getInitialProps = async () => {
   const providers = await getProviders();
   // const csrfToken = await getCsrfToken(context)
   return {
@@ -423,9 +423,4 @@ export const getStaticProps: GetStaticProps = async () => {
   };
 };
 
-export const getStaticPaths: GetStaticPaths<{ slug: string }> = async () => {
-  return {
-    paths: [], // indicates that no page needs be created at build time
-    fallback: 'blocking', // indicates the type of fallback
-  };
-};
+export default Login;

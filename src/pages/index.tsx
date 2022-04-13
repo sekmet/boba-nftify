@@ -315,7 +315,7 @@ const Index = () => {
                       <PlusSmIconSolid className="w-5 h-5" aria-hidden="true" />
                     </span>
                     <span className="ml-4 text-sm font-medium text-indigo-600 group-hover:text-indigo-500">
-                      Share
+                      Fund Account
                     </span>
                   </button>
                 </li>
