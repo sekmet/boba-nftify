@@ -32,13 +32,11 @@ const Index = () => {
           <span role="img" aria-label="rocket">
             🚀
           </span>{' '}
-          🚀 Allows users on Boba to easily deploy and engage with Arweave via
+          Allows users on Boba to easily deploy and engage with Arweave via
           Bundlr, using BOBA tokens
           <span role="img" aria-label="zap">
             ⚡️
           </span>{' '}
-          Made with Next.js, TypeScript, ESLint, Prettier, Husky, Lint-Staged,
-          VSCode, Netlify, PostCSS, Tailwind CSS,and Ethers.
         </p>
         {account && blockNumber && (
           <Fragment>

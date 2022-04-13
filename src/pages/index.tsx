@@ -50,14 +50,6 @@ let currentFile = {
     Dimensions: '4032 x 3024',
     Resolution: '72 x 72',
   },
-  sharedWith: [
-    {
-      id: 1,
-      name: 'Aimee Douglas',
-      imageUrl:
-        'https://images.unsplash.com/photo-1502685104226-ee32379fefbe?ixlib=rb-=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=3&w=1024&h=1024&q=80',
-    },
-  ],
 };
 
 const Index = () => {
@@ -67,20 +59,6 @@ const Index = () => {
   const [currentfile, setCurrentFile] = useState<any>();
   const [userFiles, setUserFiles] = useState<any>();
   const [listview, setListview] = useState<string>('grid');
-
-  /* const insertFile = (database: any) => {
-     let file1 = { 
-        name: '296300-mutation-var-3.png', 
-        size: 4695902,
-        modifiedDate: new Date(),
-        mimeType: 'image/png',
-        link: 'https://arweave.net/Mi0CyPel-0mqa3GD_h63mM_8on-Ag0aYcp3tbunngqA',
-        cid: 'Mi0CyPel-0mqa3GD_h63mM_8on-Ag0aYcp3tbunngqA',
-        minted: false
-     }
-
-     insertFileEntry(database, file1)
-  } */
 
   const getFileDetails = (filename: string) => {
     const selectedFile = getFilesByName(DB, filename);
