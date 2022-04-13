@@ -25,6 +25,10 @@ https://boba.nftify.one/
   <img src="docs/bobanftify4.jpg?raw=true" alt="BOBA NFTify banner"></a>
 </p>
 
+<p align="center">
+  <img src="docs/bobanftify6.jpg?raw=true" alt="BOBA NFTify banner"></a>
+</p>
+
 ### Requirements
 
 - Node.js 14+, npm and Metamask
