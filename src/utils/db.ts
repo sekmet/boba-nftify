@@ -2,8 +2,13 @@ const localStorageDB = require('localstoragedb')
 
 function getDatabase(localStorage: any) {
     if (!localStorage) return;
-    const DB = new localStorageDB("bobaNftifyDb", localStorage);
-    return DB;
+    try {
+        const DB = new localStorageDB("bobaNftifyDb", localStorage);
+        return DB;
+    } catch (error) {
+        
+    }
+
 }
 
 function getFiles(DB: any) {

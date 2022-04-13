@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 
 import { useEthers } from '@usedappify/core';
 import { InjectedConnector } from '@web3-react/injected-connector';
-import { NextPage } from 'next';
+import { GetServerSideProps } from 'next';
 import { signIn, getProviders } from 'next-auth/react';
 import { useRouter } from 'next/router';
 
@@ -20,7 +20,7 @@ export const injected = new InjectedConnector({
   ],
 });
 
-const Login: NextPage<any> = (props) => {
+export default function Login(props: any) {
   const { activateBrowserWallet, account, activate } = useEthers();
   const router = useRouter();
   const { providers } = props;
@@ -413,14 +413,12 @@ const Login: NextPage<any> = (props) => {
       </div>
     </Auth>
   );
-};
+}
 
-Login.getInitialProps = async () => {
+export const getServerSideProps: GetServerSideProps = async () => {
   const providers = await getProviders();
   // const csrfToken = await getCsrfToken(context)
   return {
     props: { providers },
   };
 };
-
-export default Login;
