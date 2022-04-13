@@ -1,7 +1,6 @@
 import { useEffect, useState, useContext } from 'react';
 
 // import Link from 'next/link';
-
 import { Interface } from '@ethersproject/abi';
 import { BigNumber } from '@ethersproject/bignumber';
 import { Contract } from '@ethersproject/contracts';
@@ -12,6 +11,7 @@ import prettyBytes from 'pretty-bytes';
 // import { classNames } from '@/utils';
 import { useForm } from 'react-hook-form';
 
+import { Alert } from '@/components/Alerts';
 import Identicon from '@/components/Wallet/Identicon';
 import { BundlrContext } from '@/context/BundlrContext';
 import { Dashboard } from '@/layouts/Dashboard';
@@ -50,11 +50,11 @@ const Index = (props: any) => {
   const { account } = useEthers();
   const [provider, setProvider] = useState<any>();
   const [signer, setSigner] = useState<any>();
-  // const [tokenid, setTokenId] = useState<any>();
+  const [tokenid, setTokenId] = useState<any>();
   const [chainId, setChainId] = useState<any>();
   // const [network_name, setNetworkName] = useState<string | undefined>();
   const [ownerAddress, setOwner] = useState<any>();
-  const [tokenURI, setContractUri] = useState<string | undefined>();
+  // const [tokenURI, setContractUri] = useState<string | undefined>();
   const [tokenContract, setTokenContract] = useState<string | undefined>();
   // const [minting, setMinting] = useState<undefined | boolean>();
 
@@ -82,7 +82,7 @@ const Index = (props: any) => {
       if (result) {
         const resultPlus = BigNumber.from(result).toNumber() + 1;
         console.log('Token ID dec ===> ', resultPlus);
-        // setTokenId(_result);
+        setTokenId(resultPlus);
         // setId(_result);
       }
       return result;
@@ -128,6 +128,11 @@ const Index = (props: any) => {
 
     if (json) {
       console.log('Uploading contractUri file', json);
+      Alert(
+        'info',
+        'Uploading file...',
+        'Uploading ContractURI file, please wait...'
+      );
       const res = await bundler?.uploader?.upload(json, [
         { name: 'Content-Type', value: 'application/json' },
       ]);
@@ -144,7 +149,12 @@ const Index = (props: any) => {
           : undefined,
         duration: 15000,
       });
-      setContractUri(`https://arweave.net/${res.data.id}`);
+      Alert(
+        'success',
+        'ContractURI saved!',
+        'ContractURI file uploaded with success!'
+      );
+      // setContractUri(`https://arweave.net/${res.data.id}`);
       return `https://arweave.net/${res.data.id}`;
     }
 
@@ -171,18 +181,21 @@ const Index = (props: any) => {
     // - Sending transactions for non-constant functions
     console.log('Contract => ', tokenAddress, abi, signer);
     const erc721rw = new Contract(tokenAddress, abi, signer);
+
     erc721rw.createToken(tokenUri).then(async function (tx: any) {
       // setMinting(true);
       console.log('Chain ID: ', chainId);
       console.log('Transaction: ', tx);
+      Alert('info', 'Minting...', 'Wait for the transaction to be mined...');
       console.log('Wait for the transaction to be mined...');
       await tx.wait();
       console.log('Transaction mined!', signer);
+      Alert('success', 'Transaction mined!', signer);
       // Get the token ID
-      /* const tokenId = await erc721rw.tokenOfOwnerByIndex(userAddress, 0);
-                console.log("Token ID: ", tokenId);
-                // Get the token URI
-                const tokenURI = await erc721.tokenURI(tokenId);
+      // const tokenId = await erc721rw.tokenOfOwnerByIndex(ownerAddress, 0);
+      console.log('Token ID: ', tokenid.toString());
+      // Get the token URI
+      /*          const tokenURI = await erc721.tokenURI(tokenId);
                 console.log("Token URI: ", tokenURI);
                 // Get the token name
                 const tokenName = await erc721.name(tokenId);
@@ -196,7 +209,13 @@ const Index = (props: any) => {
       // Get the token balance
       const tokenBalance = await erc721.balanceOf(ownerAddress);
       console.log('Token Balance: ', tokenBalance);
+      Alert('info', 'Token Balance', tokenBalance);
 
+      Alert(
+        'success',
+        `Token Minted!`,
+        `${tokenName} - Contract Address: ${tokenAddress} and Token ID: [ ${tokenid.toString()} ]`
+      );
       /* const itemData: IItemData = {
           network: network_name,
           token_id: tokenid,
@@ -223,7 +242,9 @@ const Index = (props: any) => {
       '',
       data?.nft_external_url,
       ''
-    );
+    ).then((tokenUriNft: any) => {
+      mintNFT(tokenContract, tokenUriNft, 'NfifyV1', 'Nftify v1.0 nft');
+    });
   };
 
   useEffect(() => {
@@ -438,53 +459,43 @@ const Index = (props: any) => {
                     </div>
                   </dl>
                 </div>
-                <div className="flex">
+                {/* <div className="flex">
                   <button
                     type="submit"
                     className="flex-1 py-2 px-4 w-full text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-md border border-transparent focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 shadow-sm"
                   >
                     Save Information
                   </button>
+                        </div> */}
+
+                <div className="mt-3">
+                  <h3 className="font-medium text-gray-900">Owner</h3>
+                  <ul
+                    role="list"
+                    className="mt-2 border-y border-gray-200 divide-y divide-gray-200"
+                  >
+                    <li className="flex justify-between items-center py-3">
+                      <div className="flex items-center">
+                        <span className="w-8 h-8 rounded-full">
+                          <Identicon accountId={account} iconSize={32} />
+                        </span>
+                        <p className="ml-2 text-xs font-medium text-gray-900">
+                          {account}
+                        </p>
+                      </div>
+                    </li>
+                  </ul>
                 </div>
-              </form>
 
-              <div>
-                <h3 className="font-medium text-gray-900">Owner</h3>
-                <ul
-                  role="list"
-                  className="mt-2 border-y border-gray-200 divide-y divide-gray-200"
-                >
-                  <li className="flex justify-between items-center py-3">
-                    <div className="flex items-center">
-                      <span className="w-8 h-8 rounded-full">
-                        <Identicon accountId={account} iconSize={32} />
-                      </span>
-                      <p className="ml-2 text-xs font-medium text-gray-900">
-                        {account}
-                      </p>
-                    </div>
-                  </li>
-                </ul>
-              </div>
-
-              {tokenURI && (
-                <div className="flex">
+                <div className="flex mt-6">
                   <button
-                    type="button"
+                    type="submit"
                     className="flex-1 py-2 px-4 w-full text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-md border border-transparent focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 shadow-sm"
-                    onClick={async () =>
-                      mintNFT(
-                        tokenContract,
-                        tokenURI,
-                        'MintifyV1',
-                        'Mintify v1.0 nft'
-                      )
-                    }
                   >
                     Mint NFT (ERC721)
                   </button>
                 </div>
-              )}
+              </form>
             </div>
           </aside>
         </div>

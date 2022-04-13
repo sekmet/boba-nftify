@@ -3,6 +3,7 @@ import { useState, useContext, useEffect } from 'react';
 import { CurrencyDollarIcon as CurrencyDollarIconSolid } from '@heroicons/react/solid';
 import BigNumber from 'bignumber.js';
 
+import { Alert } from '@/components/Alerts';
 import { BundlrContext } from '@/context/BundlrContext';
 import { Dashboard } from '@/layouts/Dashboard';
 import { Meta } from '@/layouts/Meta';
@@ -26,6 +27,8 @@ const Profile = () => {
 
   const fundBobaEther = async () => {
     if (bundler && fundAmount) {
+      // 'info', 'Checking...', 'Checking to enable transfer funds...'
+      Alert('warning', 'Checking...', 'Checking to enable transfer funds...');
       console.log({
         status: 'info',
         title: 'Checking...',
@@ -46,6 +49,7 @@ const Profile = () => {
           amount: fundAmount.toString(),
           duration: 15000,
         });
+        Alert('info', 'Funding...', 'Fuding selected account...');
         await bundler
           .fund(value)
           .then((res: any) => {
@@ -55,12 +59,18 @@ const Profile = () => {
               description: ` tx ID : ${res?.id}`,
               duration: 10000,
             });
+            Alert('success', `Funding Complete!`, `Tx ID : ${res?.id}`);
           })
           .catch((e: any) => {
             console.log({
               status: 'error',
               title: `Failed to fund - ${e.data?.message || e.message}`,
             });
+            Alert(
+              'error',
+              `Failed to fund!`,
+              `${e.data?.message || e.message}`
+            );
           });
       }
       // Wait for an hour before checking again (Arweave specific)

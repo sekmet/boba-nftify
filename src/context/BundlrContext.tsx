@@ -6,26 +6,6 @@ import { WebBundlr } from "@bundlr-network/client";
 
 declare let window: any // TODO: specifically extend type to valid injected objects.
 
-
-/*const connData = fetchData().then(( res ) => {
-let bundlr, bundlr_boba, library, currency = {};
-if (res !== 'undefined'){
-const { bundlr, bundlr_boba, library, currency } = res;
-//console.log({ bundlr, bundlr_boba, library, currency })
-} 
-
-return {
-  bundler: bundlr,
-  bundlerBoba: bundlr_boba,
-  library: library, 
-  currency: currency,
-  setBundler: () => {},
-  setBundlerAddress: () => {},
-  setBundlerBoba: () => {}
-};
-
-})*/
-
 export const BundlrContext = createContext({});
 
 function BundlrContextProvider (props:any) {
@@ -42,33 +22,33 @@ function BundlrContextProvider (props:any) {
     if (typeof window === 'undefined') return;
   
     const bundlerHttpAddress = "https://devnet.bundlr.network";
-    const library = new ethers.providers.Web3Provider(window.ethereum, 'any');
-    const currency = 'boba-eth';
-    console.log('window.ethereum ======================= ', library)
-  
-    if (library && library?._network?.chainId !== 28) {
+    const libraryWeb3 = new ethers.providers.Web3Provider(window.ethereum, 'any');
+    const currencyWeb3 = 'boba-eth';  
+    /* eslint-disable no-underscore-dangle */
+    if (libraryWeb3 && libraryWeb3?._network?.chainId !== 28) {
       // If not connected to boba, request network switch
-      await library.send("wallet_switchEthereumChain", [{ chainId: "0x1C" }]);
+      await libraryWeb3.send("wallet_switchEthereumChain", [{ chainId: "0x1C" }]);
     }
   
     //const provider = new ethers.providers.Web3Provider(window.ethereum);
-    await library && library._ready()    
+    /* eslint-disable no-underscore-dangle */
+    libraryWeb3 && await libraryWeb3._ready()    
   
-    if (!bundlerHttpAddress) return;
-    //const bundlr = new BundlrBobaClient(bundlerHttpAddress, library);
-    //console.log(bundlerHttpAddress, currency, library)
+    // if (bundlerHttpAddress === 'undefined') return;
+    // const bundlr = new BundlrBobaClient(bundlerHttpAddress, library);
+    // console.log(bundlerHttpAddress, currency, library)
     
-    const bundlr = new WebBundlr(bundlerHttpAddress, currency, library,{ 
+    const bundlr = new WebBundlr(bundlerHttpAddress, currencyWeb3, libraryWeb3,{ 
       providerUrl: "https://rinkeby.boba.network/",
       //contractAddress: "0x853758425e953739F5438fd6fd0Efe04A477b039"
     });
     await bundlr.ready();
   
-    const bundlr_boba = new WebBundlr(bundlerHttpAddress, 'boba', library,{ 
+    const bundlrBoba = new WebBundlr(bundlerHttpAddress, 'boba', libraryWeb3,{ 
       providerUrl: "https://rinkeby.boba.network/",
-      //contractAddress: "0x853758425e953739F5438fd6fd0Efe04A477b039"
+      contractAddress: "0x122278A06753D5af91383848B13CF136F9C6f721"
     });
-    await bundlr_boba.ready();
+    await bundlrBoba.ready();
   
     try {
       // Check for valid bundlr node
@@ -92,9 +72,9 @@ function BundlrContextProvider (props:any) {
       //console.log("connected to bundlr", bundlr, bundlr?.address);
       setBundlerAddress(bundlr?.address)
       setBundler(bundlr);
-      setBundlerBoba(bundlr_boba);
-      setLibrary(library);
-      setCurrency(currency);
+      setBundlerBoba(bundlrBoba);
+      setLibrary(libraryWeb3);
+      setCurrency(currencyWeb3);
       
       //localStorage.setItem('bundler', currency);
       // setBundlerUpload(bundlrUpload);

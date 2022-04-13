@@ -302,13 +302,23 @@ const Index = () => {
                 <Link href={`/mint/${currentFile.ID}`}>
                   <a
                     id="mint"
-                    className="flex-1 py-2 px-4 w-full text-sm font-medium text-center text-white bg-indigo-600 hover:bg-indigo-700 rounded-md border border-transparent focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 shadow-sm"
+                    className="flex-1 py-2 px-4 w-full text-sm font-medium text-center text-white bg-indigo-600 hover:bg-indigo-700 rounded-md border border-transparent focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 shadow-md"
                   >
                     Create NFT
                   </a>
                 </Link>
               </div>
             )}
+            <div className="flex">
+              <Link href={`/upload`}>
+                <a
+                  id="uploadfile"
+                  className="flex-1 py-2 px-4 w-full text-sm font-medium text-center text-white bg-green-600 hover:bg-green-700 rounded-md border border-transparent focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 shadow-md"
+                >
+                  Upload File
+                </a>
+              </Link>
+            </div>
           </div>
         </aside>
       </div>

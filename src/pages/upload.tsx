@@ -14,8 +14,10 @@ import { useEthers } from '@usedappify/core';
 import BigNumber from 'bignumber.js';
 import * as ethers from 'ethers';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import prettyBytes from 'pretty-bytes';
 
+import { Alert } from '@/components/Alerts';
 import Identicon from '@/components/Wallet/Identicon';
 import { BundlrContext } from '@/context/BundlrContext';
 import { Dashboard } from '@/layouts/Dashboard';
@@ -80,7 +82,7 @@ const Index = () => {
   // const [fundAmount, setFundingAmount] = useState<string>();
   // const [withdrawAmount, setWithdrawAmount] = useState<string>();
   const [selectedToken, setSelectedToken] = useState<any>(payTokens[1]);
-
+  const router = useRouter();
   // parse decimal input into atomic units
   /* const parseInput = (input: string | number) => {
     const conv = new BigNumber(input).multipliedBy(bundler!.currencyConfig.base[1]);
@@ -142,6 +144,11 @@ const Index = () => {
     const priceUpload = await bundler?.getPrice(imgUploadedsize);
 
     if (balance.isLessThan(priceUpload)) {
+      Alert(
+        'warning',
+        'Lazy funding account...',
+        'Lazy funding account before the upload...'
+      );
       const amount = priceUpload.minus(balance).multipliedBy(1.3);
       await bundler.fund(amount.minus(amount.modulo(1)));
     }
@@ -151,6 +158,7 @@ const Index = () => {
     if (img && imgFile) {
       await lazyFunding(img);
       console.log('uploading file', img);
+      Alert('info', 'Uploading file...', 'Uploading file, please wait...');
       const res = await bundler?.uploader?.upload(img, [
         { name: 'Content-Type', value: imgFile.type },
       ]);
@@ -167,6 +175,15 @@ const Index = () => {
           : undefined,
         duration: 15000,
       });
+      Alert(
+        res?.status === 200 || res?.status === 201 ? 'success' : 'error',
+        res?.status === 200 || res?.status === 201
+          ? 'Successful!'
+          : `Unsuccessful! ${res?.status}`,
+        res?.status === 200 || res?.status === 201
+          ? `File upload to: https://arweave.net/${res.data.id}`
+          : 'Error to upload the file!'
+      );
 
       // insert file entry
       const file2Upload = {
@@ -180,6 +197,7 @@ const Index = () => {
       };
 
       insertFileEntry(database, file2Upload);
+      router.push('/');
     }
   };
 
@@ -275,17 +293,15 @@ const Index = () => {
         ? ethers.utils.formatEther(priceBoba.toString())
         : '0',
       'BOBA/ETH Cost': price ? ethers.utils.formatEther(price.toString()) : '0',
-      Created: 'June 8, 2020',
+      /* Created: 'June 8, 2020',
       'Last modified': 'June 8, 2020',
       Dimensions: '4032 x 3024',
-      Resolution: '72 x 72',
+      Resolution: '72 x 72', */
     },
     sharedWith: [
       {
         id: 1,
         name: account || '0x',
-        imageUrl:
-          'https://images.unsplash.com/photo-1502685104226-ee32379fefbe?ixlib=rb-=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=3&w=1024&h=1024&q=80',
       },
     ],
   };
@@ -329,41 +345,40 @@ const Index = () => {
             {!imgSrc && (
               <div className="mt-6 md:py-3 md:px-4">
                 <div className="flex justify-center py-10 px-6 mt-1 rounded-md border-2 border-gray-300 border-dashed">
-                  <div className="space-y-1 text-center">
-                    <svg
-                      className="mx-auto w-12 h-12 text-gray-400"
-                      stroke="currentColor"
-                      fill="none"
-                      viewBox="0 0 48 48"
-                      aria-hidden="true"
-                    >
-                      <path
-                        d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
-                        strokeWidth={2}
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                    <div className="flex text-sm text-gray-600">
-                      <label
-                        htmlFor="file-upload"
-                        className="relative font-medium text-indigo-600 hover:text-indigo-500 bg-white rounded-md focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 cursor-pointer"
+                  <button
+                    id="uploaditem"
+                    className="justify-center"
+                    onClick={handleFileClick}
+                  >
+                    <div className="space-y-1 text-center">
+                      <svg
+                        className="mx-auto w-12 h-12 text-gray-400"
+                        stroke="currentColor"
+                        fill="none"
+                        viewBox="0 0 48 48"
+                        aria-hidden="true"
                       >
-                        <span>Select a file</span>
-                        <button
-                          id="file-upload"
-                          name="file-upload"
-                          type="button"
-                          className="sr-only"
-                          onClick={handleFileClick}
+                        <path
+                          d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
+                          strokeWidth={2}
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
                         />
-                      </label>
-                      <p className="pl-1">or drag and drop</p>
+                      </svg>
+                      <div className="flex text-sm text-gray-600">
+                        <label
+                          htmlFor="file-upload"
+                          className="relative font-medium text-indigo-600 hover:text-indigo-500 bg-white rounded-md focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 cursor-pointer"
+                        >
+                          <span>Select a file</span>
+                        </label>
+                        <p className="pl-1">or drag and drop</p>
+                      </div>
+                      <p className="text-xs text-gray-500">
+                        PNG, JPG, GIF, MP4, MP3, OGG
+                      </p>
                     </div>
-                    <p className="text-xs text-gray-500">
-                      PNG, JPG, GIF, MP4, MP3, OGG
-                    </p>
-                  </div>
+                  </button>
                 </div>
               </div>
             )}
