@@ -3,6 +3,7 @@ import { ethers } from 'ethers';
 import { useEthers } from '@usedappify/core';
 // import WebBundlr
 import { WebBundlr } from "@bundlr-network/client";
+import { useRouter } from 'next/router';
 
 declare let window: any // TODO: specifically extend type to valid injected objects.
 
@@ -15,6 +16,7 @@ function BundlrContextProvider (props:any) {
   const [currency, setCurrency] = useState<string>();
   const [library, setLibrary] = useState<any>();
   const { account } = useEthers();
+  const router = useRouter();
 
   useEffect(() => {
   const fetchData = async () => {
@@ -78,6 +80,7 @@ function BundlrContextProvider (props:any) {
       
       //localStorage.setItem('bundler', currency);
       // setBundlerUpload(bundlrUpload);
+      router.push('/upload');
     }
   
   

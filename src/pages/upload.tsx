@@ -75,6 +75,7 @@ const Index = () => {
   const [bundlerHttpAddress, setBundlerHttpAddress] = useState<string>(
     'https://devnet.bundlr.network'
   );
+  const [accountAddress, setAccountAddress] = useState<string>();
   const [bundlerAddress, setBundlerAddress] = useState<string>();
   const [currency, setCurrency] = useState<string>();
   const [library, setLibrary] = useState<any>();
@@ -154,50 +155,118 @@ const Index = () => {
     }
   };
 
+  const lazyFundingBoba = async (imgUploaded: any) => {
+    if (bundlerBoba === null) {
+      throw new Error('Bundlr not connected');
+    }
+    const balance = await bundlerBoba?.getLoadedBalance();
+    const imgUploadedsize = Buffer.from(imgUploaded).byteLength;
+    const priceUpload = await bundlerBoba?.getPrice(imgUploadedsize);
+
+    if (balance.isLessThan(priceUpload)) {
+      Alert(
+        'warning',
+        'Lazy funding account...',
+        'Lazy funding account before the upload...'
+      );
+      const amount = priceUpload.minus(balance).multipliedBy(1.3);
+      await bundlerBoba.fund(amount.minus(amount.modulo(1)));
+    }
+  };
+
   const uploadFile = async (database: any) => {
-    if (img && imgFile) {
-      await lazyFunding(img);
-      console.log('uploading file', img);
-      Alert('info', 'Uploading file...', 'Uploading file, please wait...');
-      const res = await bundler?.uploader?.upload(img, [
-        { name: 'Content-Type', value: imgFile.type },
-      ]);
-      console.log(res);
-      console.log({
-        status:
+    if (img && imgFile && accountAddress) {
+      if (selectedToken.id === 1) {
+        await lazyFundingBoba(img);
+        console.log('uploading file', img);
+        Alert('info', 'Uploading file...', 'Uploading file, please wait...');
+        const res = await bundlerBoba?.uploader?.upload(img, [
+          { name: 'Content-Type', value: imgFile.type },
+        ]);
+
+        console.log({
+          status:
+            res?.status === 200 || res?.status === 201 ? 'success' : 'error',
+          title:
+            res?.status === 200 || res?.status === 201
+              ? 'Successful!'
+              : `Unsuccessful! ${res?.status}`,
+          description: res?.data.id
+            ? `https://arweave.net/${res.data.id}`
+            : undefined,
+          duration: 15000,
+        });
+        Alert(
           res?.status === 200 || res?.status === 201 ? 'success' : 'error',
-        title:
           res?.status === 200 || res?.status === 201
             ? 'Successful!'
             : `Unsuccessful! ${res?.status}`,
-        description: res?.data.id
-          ? `https://arweave.net/${res.data.id}`
-          : undefined,
-        duration: 15000,
-      });
-      Alert(
-        res?.status === 200 || res?.status === 201 ? 'success' : 'error',
-        res?.status === 200 || res?.status === 201
-          ? 'Successful!'
-          : `Unsuccessful! ${res?.status}`,
-        res?.status === 200 || res?.status === 201
-          ? `File upload to: https://arweave.net/${res.data.id}`
-          : 'Error to upload the file!'
-      );
+          res?.status === 200 || res?.status === 201
+            ? `File upload to: https://arweave.net/${res.data.id}`
+            : 'Error to upload the file!'
+        );
 
-      // insert file entry
-      const file2Upload = {
-        name: imgFile.name,
-        size: imgFile.size,
-        modifiedDate: imgFile?.lastModified ? imgFile.lastModified : new Date(),
-        mimeType: imgFile.type,
-        link: res?.data.id ? `https://arweave.net/${res.data.id}` : undefined,
-        cid: res?.data.id ? res.data.id : undefined,
-        minted: false,
-      };
+        // insert file entry
+        const file2Upload = {
+          name: imgFile.name,
+          size: imgFile.size,
+          modifiedDate: imgFile?.lastModified
+            ? imgFile.lastModified
+            : new Date(),
+          mimeType: imgFile.type,
+          link: res?.data.id ? `https://arweave.net/${res.data.id}` : undefined,
+          cid: res?.data.id ? res.data.id : undefined,
+          minted: false,
+        };
 
-      insertFileEntry(database, file2Upload);
-      router.push('/');
+        insertFileEntry(database, file2Upload, accountAddress);
+        router.push('/');
+      } else {
+        await lazyFunding(img);
+        console.log('uploading file', img);
+        Alert('info', 'Uploading file...', 'Uploading file, please wait...');
+        const res = await bundler?.uploader?.upload(img, [
+          { name: 'Content-Type', value: imgFile.type },
+        ]);
+
+        console.log({
+          status:
+            res?.status === 200 || res?.status === 201 ? 'success' : 'error',
+          title:
+            res?.status === 200 || res?.status === 201
+              ? 'Successful!'
+              : `Unsuccessful! ${res?.status}`,
+          description: res?.data.id
+            ? `https://arweave.net/${res.data.id}`
+            : undefined,
+          duration: 15000,
+        });
+        Alert(
+          res?.status === 200 || res?.status === 201 ? 'success' : 'error',
+          res?.status === 200 || res?.status === 201
+            ? 'Successful!'
+            : `Unsuccessful! ${res?.status}`,
+          res?.status === 200 || res?.status === 201
+            ? `File upload to: https://arweave.net/${res.data.id}`
+            : 'Error to upload the file!'
+        );
+
+        // insert file entry
+        const file2Upload = {
+          name: imgFile.name,
+          size: imgFile.size,
+          modifiedDate: imgFile?.lastModified
+            ? imgFile.lastModified
+            : new Date(),
+          mimeType: imgFile.type,
+          link: res?.data.id ? `https://arweave.net/${res.data.id}` : undefined,
+          cid: res?.data.id ? res.data.id : undefined,
+          minted: false,
+        };
+
+        insertFileEntry(database, file2Upload, accountAddress);
+        router.push('/');
+      }
     }
   };
 
@@ -317,8 +386,16 @@ const Index = () => {
     const db = getDatabase(window.localStorage);
     setDb(db);
     // connectBundlr();
-    setBundlerAddress(bundler?.address);
+    if (selectedToken.id === 1) {
+      setBundlerAddress(bundlerBoba?.address);
+    } else {
+      setBundlerAddress(bundler?.address);
+    }
+
     setBundlerHttpAddress('https://devnet.bundlr.network');
+    if (account && account !== 'undefined') {
+      setAccountAddress(account);
+    }
   }, []);
   console.log('bundlerAddress ', currency, library, bundlerAddress, imgFile);
 
@@ -602,7 +679,7 @@ const Index = () => {
                     </li>
                   ))}
                   <li className="flex justify-between items-center py-2">
-                    <Link href="/profile">
+                    <Link href="/profile" passHref>
                       <button
                         type="button"
                         className="group flex items-center p-1 -ml-1 bg-white rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"

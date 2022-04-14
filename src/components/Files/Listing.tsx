@@ -42,7 +42,7 @@ export function Listing(props: any) {
                 className="relative font-bold text-indigo-600 hover:text-indigo-500 bg-white rounded-md focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 cursor-pointer"
               >
                 <span>Click here to START</span>
-                <Link href="/upload">
+                <Link href="/upload" passHref>
                   <button
                     id="file-upload"
                     name="file-upload"

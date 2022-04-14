@@ -14,7 +14,7 @@ import { Listing } from '@/components/Files/Listing';
 import Identicon from '@/components/Wallet/Identicon';
 import { Dashboard } from '@/layouts/Dashboard';
 import { Meta } from '@/layouts/Meta';
-import { classNames } from '@/utils';
+import { classNames, ellipsisAddress, getBobaExplorer } from '@/utils';
 // import { Dialog, Menu, Transition } from '@headlessui/react'
 /* import {
   // CogIcon,
@@ -28,7 +28,11 @@ import { classNames } from '@/utils';
   ViewGridIcon as ViewGridIconOutline,
   // XIcon,
 } from '@heroicons/react/outline' */
-import { getDatabase, getFiles, getFilesByName } from '@/utils/db';
+import {
+  getDatabase,
+  getFilesByAccountAddress,
+  getFilesByName,
+} from '@/utils/db';
 
 declare let window: any; // TODO: specifically extend type to valid injected objects.
 
@@ -68,7 +72,10 @@ const Index = () => {
   useEffect(() => {
     const db = getDatabase(window.localStorage);
     setDb(db);
-    const cfiles = getFiles(getDatabase(window.localStorage));
+    const cfiles = getFilesByAccountAddress(
+      getDatabase(window.localStorage),
+      account
+    );
     setUserFiles(cfiles);
     if (cfiles.length) {
       const currentFilename = getFilesByName(db, cfiles[0].name);
@@ -238,6 +245,54 @@ const Index = () => {
             <div>
               <h3 className="font-medium text-gray-900">Information</h3>
               <dl className="mt-2 border-y border-gray-200 divide-y divide-gray-200">
+                {currentfile && (
+                  <div className="flex justify-between py-3 text-sm font-medium">
+                    <dt className="text-gray-500">Type</dt>
+                    <dd className="text-gray-900">{currentfile.mimeType}</dd>
+                  </div>
+                )}
+
+                {currentfile && currentfile.minted === true && (
+                  <>
+                    <div className="flex justify-between py-3 text-sm font-medium">
+                      <dt className="text-gray-500">Owner</dt>
+                      <dd className="text-gray-900">
+                        <a
+                          href={getBobaExplorer(
+                            'rinkeby',
+                            'address',
+                            currentfile.accountAddress
+                          )}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          {ellipsisAddress(currentfile.accountAddress)}
+                        </a>
+                      </dd>
+                    </div>
+                    <div className="flex justify-between py-3 text-sm font-medium">
+                      <dt className="text-gray-500">Contract</dt>
+                      <dd className="text-gray-900">
+                        <a
+                          href={getBobaExplorer(
+                            'rinkeby',
+                            'address',
+                            currentfile.accountAddress
+                          )}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          {ellipsisAddress(currentfile.contractAddress)}
+                        </a>
+                      </dd>
+                    </div>
+                    <div className="flex justify-between py-3 text-sm font-medium">
+                      <dt className="text-gray-500">Token ID</dt>
+                      <dd className="text-gray-900">{currentfile.tokenId}</dd>
+                    </div>
+                  </>
+                )}
+
                 {/* Object.keys(currentFile.information).map((key) => (
                       <div key={key} className="py-3 flex justify-between text-sm font-medium">
                         <dt className="text-gray-500">{key}</dt>
@@ -297,7 +352,7 @@ const Index = () => {
                 </li>
               </ul>
             </div>
-            {currentfile && (
+            {currentfile && currentfile.minted === false && (
               <div className="flex">
                 <Link href={`/mint/${currentFile.ID}`}>
                   <a

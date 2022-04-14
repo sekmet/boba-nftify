@@ -7,6 +7,7 @@ import { Contract } from '@ethersproject/contracts';
 import { Web3Provider } from '@ethersproject/providers';
 import { useEthers } from '@usedappify/core';
 import { GetStaticProps, GetStaticPaths } from 'next';
+import { useRouter } from 'next/router';
 import prettyBytes from 'pretty-bytes';
 // import { classNames } from '@/utils';
 import { useForm } from 'react-hook-form';
@@ -45,7 +46,7 @@ const contractURI = (
 `;
 
 const Index = (props: any) => {
-  // const router = useRouter();
+  const router = useRouter();
   const { bundler /* , bundlerBoba */ } = useContext<any>(BundlrContext);
   const { account } = useEthers();
   const [provider, setProvider] = useState<any>();
@@ -57,6 +58,8 @@ const Index = (props: any) => {
   // const [tokenURI, setContractUri] = useState<string | undefined>();
   const [tokenContract, setTokenContract] = useState<string | undefined>();
   // const [minting, setMinting] = useState<undefined | boolean>();
+  const [DB, setDb] = useState<any>();
+  const [currentfile, setCurrentFile] = useState<any>();
 
   const {
     register,
@@ -70,9 +73,22 @@ const Index = (props: any) => {
     process.env.NFT721_CONTRACT_ADDRESS ||
     '0x929B283D2f0B86D9CBEb50f30DbA7585dD9733B8'; // "0xA03dc0FAa9e3b76f92D5d340c62F9969e221bdbC";
 
-  // const [DB, setDb] = useState<any>();
-  const [currentfile, setCurrentFile] = useState<any>();
   const { id } = props;
+
+  const updateFilentry = (
+    fileId: number,
+    fieldname: string,
+    value: string | number | boolean
+  ) => {
+    const updatedRow = DB.update('files', { ID: fileId }, function (row: any) {
+      const urow = row;
+      urow[fieldname] = value;
+      // the update callback function returns to the modified record
+      return urow;
+    });
+
+    if (updatedRow) DB.commit();
+  };
 
   let erc721: any = {};
   if (address && abi && provider) {
@@ -127,11 +143,11 @@ const Index = (props: any) => {
     );
 
     if (json) {
-      console.log('Uploading contractUri file', json);
+      console.log('Uploading nft metadata file', json);
       Alert(
         'info',
-        'Uploading file...',
-        'Uploading ContractURI file, please wait...'
+        'Uploading metadata...',
+        'Uploading metadata file, please wait...'
       );
       const res = await bundler?.uploader?.upload(json, [
         { name: 'Content-Type', value: 'application/json' },
@@ -151,10 +167,15 @@ const Index = (props: any) => {
       });
       Alert(
         'success',
-        'ContractURI saved!',
-        'ContractURI file uploaded with success!'
+        'Metadata saved!',
+        'Metadata file uploaded with success!'
       );
       // setContractUri(`https://arweave.net/${res.data.id}`);
+      updateFilentry(
+        currentfile.ID,
+        'linkToken',
+        `https://arweave.net/${res.data.id}`
+      );
       return `https://arweave.net/${res.data.id}`;
     }
 
@@ -209,13 +230,15 @@ const Index = (props: any) => {
       // Get the token balance
       const tokenBalance = await erc721.balanceOf(ownerAddress);
       console.log('Token Balance: ', tokenBalance);
-      Alert('info', 'Token Balance', tokenBalance);
-
+      // Alert('info', 'Token Balance', tokenBalance);
+      updateFilentry(currentfile.ID, 'contractAddress', tokenAddress);
+      updateFilentry(currentfile.ID, 'tokenId', tokenid.toString());
       Alert(
         'success',
         `Token Minted!`,
         `${tokenName} - Contract Address: ${tokenAddress} and Token ID: [ ${tokenid.toString()} ]`
       );
+      updateFilentry(currentfile.ID, 'minted', true);
       /* const itemData: IItemData = {
           network: network_name,
           token_id: tokenid,
@@ -231,6 +254,9 @@ const Index = (props: any) => {
     });
 
     console.log(tokenName, tokenDescription);
+    setTimeout(() => {
+      router.push('/');
+    }, 3000);
     // setMinting(false);
   };
 
@@ -249,10 +275,10 @@ const Index = (props: any) => {
 
   useEffect(() => {
     const db = getDatabase(window.localStorage);
-    // setDb(db)
+    setDb(db);
     // const cfiles = getFiles(getDatabase(window.localStorage));
     const selectedFile = getFilesByID(db, id); // getFilesByName(db, cfiles[0].name)
-    if (!currentfile) setCurrentFile(selectedFile[0]);
+    setCurrentFile(selectedFile[0]);
 
     // Connect to the Ethereum network
     const providerEth = new Web3Provider(window.ethereum, 'any');
