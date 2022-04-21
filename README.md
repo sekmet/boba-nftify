@@ -47,25 +47,6 @@ $ yarn run start
 
 Now, your app is ready to be deployed. All generated files are located at `out` folder, which you can deploy with any hosting service.
 
-<p align="center">
-  <img src="docs/bobanftify1.jpg?raw=true" alt="BOBA NFTify banner"></a>
-</p>
-
-<p align="center">
-  <img src="docs/bobanftify2.jpg?raw=true" alt="BOBA NFTify banner"></a>
-</p>
-
-<p align="center">
-  <img src="docs/bobanftify3.jpg?raw=true" alt="BOBA NFTify banner"></a>
-</p>
-
-<p align="center">
-  <img src="docs/bobanftify4.jpg?raw=true" alt="BOBA NFTify banner"></a>
-</p>
-
-<p align="center">
-  <img src="docs/bobanftify6.jpg?raw=true" alt="BOBA NFTify banner"></a>
-</p>
 
 ### VSCode information (optional)
 
