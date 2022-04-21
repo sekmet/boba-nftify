@@ -6,10 +6,6 @@
 
 🚀 Allows users on Boba to easily deploy and engage with Arweave via Bundlr, using BOBA tokens.
 
-## Demo
-
-### [https://boba.nftify.one/](https://boba.nftify.one/)
-
 ## Features
 
 - 🔥 Allow fund your bundlr with "BOBA" and "BOBA/ETH" tokens
